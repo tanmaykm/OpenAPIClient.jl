@@ -50,4 +50,4 @@ function validate_param(param, operation, rule, value, args...)
     throw(ValidationException(msg))
 end
 
-validate_property(::Type{T}, name::Symbol, val) where {T<:OpenAPIModel} = nothing
+validate_property(::Type{T}, name::Symbol, val) where {T<:APIModel} = nothing

@@ -1,12 +1,12 @@
 # JSONWrapper for OpenAPI models handles
 # - null fields
 # - field names that are Julia keywords
-struct JSONWrapper{T<:OpenAPIModel} <: AbstractDict{Symbol, Any}
+struct JSONWrapper{T<:APIModel} <: AbstractDict{Symbol, Any}
     wrapped::T
     flds::Vector{Symbol}
 end
 
-JSONWrapper(o::T) where {T<:OpenAPIModel} = JSONWrapper(o, filter(n->hasproperty(o,n), propertynames(T)))
+JSONWrapper(o::T) where {T<:APIModel} = JSONWrapper(o, filter(n->hasproperty(o,n), propertynames(T)))
 
 getindex(w::JSONWrapper, s::Symbol) = getproperty(w.wrapped, s)
 keys(w::JSONWrapper) = w.flds
@@ -23,7 +23,7 @@ function iterate(w::JSONWrapper, state...)
     end
 end
 
-lower(o::T) where {T<:OpenAPIModel} = JSONWrapper(o)
+lower(o::T) where {T<:APIModel} = JSONWrapper(o)
 
 to_json(o) = JSON.json(o)
 
@@ -33,7 +33,7 @@ from_json(::Type{T}, json::Dict{String,Any}) where {T <: Dict} = convert(T, json
 from_json(::Type{T}, j::Dict{String,Any}) where {T <: String} = to_json(j)
 from_json(::Type{Any}, j::Dict{String,Any}) = j
 
-function from_json(o::T, json::Dict{String,Any}) where {T <: OpenAPIModel}
+function from_json(o::T, json::Dict{String,Any}) where {T <: APIModel}
     jsonkeys = [Symbol(k) for k in keys(json)]
     for name in intersect(propertynames(T), jsonkeys)
         from_json(o, name, json[String(name)])
@@ -41,7 +41,7 @@ function from_json(o::T, json::Dict{String,Any}) where {T <: OpenAPIModel}
     o
 end
 
-function from_json(o::T, name::Symbol, json::Dict{String,Any}) where {T <: OpenAPIModel}
+function from_json(o::T, name::Symbol, json::Dict{String,Any}) where {T <: APIModel}
     ftype = property_type(T, name)
     fval = from_json(ftype, json)
     setfield!(o, field_name(T,name), convert(ftype, fval))

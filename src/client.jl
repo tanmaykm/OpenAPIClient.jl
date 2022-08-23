@@ -1,5 +1,7 @@
-# collection formats
-const COLL_MULTI = "multi"  # aliased to CSV, as multi is not supported by Requests.jl (https://github.com/JuliaWeb/Requests.jl/issues/140)
+# collection formats (OpenAPI v2)
+# TODO: OpenAPI v3 has style and explode options instead of collection formats, which are yet to be supported
+# TODO: Examine whether multi is now supported
+const COLL_MULTI = "multi"  # (legacy) aliased to CSV, as multi is not supported by Requests.jl (https://github.com/JuliaWeb/Requests.jl/issues/140)
 const COLL_PIPES = "pipes"
 const COLL_SSV = "ssv"
 const COLL_TSV = "tsv"
@@ -105,7 +107,7 @@ function with_timeout(fn, client::Client, timeout::Integer)
     end
 end
 
-function with_timeout(fn, api::OpenAPIApi, timeout::Integer)
+function with_timeout(fn, api::APIImpl, timeout::Integer)
     client = api.client
     oldtimeout = client.timeout[]
     client.timeout[] = timeout
@@ -173,15 +175,15 @@ function set_header_content_type(ctx::Ctx, ctypes::Vector{String})
     return nothing
 end
 
-set_param(params::Dict{String,String}, name::String, value::Nothing; collection_format=nothing) = nothing
+set_param(params::Dict{String,String}, name::String, value::Nothing; collection_format=",") = nothing
 
-function set_param(params::Dict{String,String}, name::String, value::Union{Nothing,T}; collection_format=nothing) where {T}
+function set_param(params::Dict{String,String}, name::String, value::Union{Nothing,T}; collection_format=",") where {T}
     (value === nothing) && return
 
     if !isa(value, Vector) || isempty(collection_format)
         params[name] = string(value)
     else
-        dlm = get(COLL_DLM, collection_format, "")
+        dlm = get(COLL_DLM, collection_format, ",")
         isempty(dlm) && throw(OpenAPIException("Unsupported collection format $collection_format"))
         params[name] = join(string.(value), dlm)
     end
@@ -224,7 +226,7 @@ function prep_args(ctx::Ctx)
             body = to_json(ctx.body)
         elseif ("application/x-www-form-urlencoded" == ctx.header["Content-Type"]) && isa(ctx.body, Dict)
             body = URIs.escapeuri(ctx.body)
-        elseif isa(ctx.boody, OpenAPIModel) && isempty(get(ctx.header, "Content-Type", ""))
+        elseif isa(ctx.boody, APIModel) && isempty(get(ctx.header, "Content-Type", ""))
             headers["Content-Type"] = "application/json"
             body = to_json(ctx.body)
         else
@@ -411,12 +413,12 @@ function exec(ctx::Ctx, stream_to::Union{Channel,Nothing}=nothing)
     end
 end
 
-property_type(::Type{T}, name::Symbol) where {T<:OpenAPIModel} = error("invalid type $T")
-field_name(::Type{T}, name::Symbol) where {T<:OpenAPIModel} = error("invalid type $T")
+property_type(::Type{T}, name::Symbol) where {T<:APIModel} = error("invalid type $T")
+field_name(::Type{T}, name::Symbol) where {T<:APIModel} = error("invalid type $T")
 
-getproperty(o::T, name::Symbol) where {T<:OpenAPIModel} = getfield(o, field_name(T,name))
-hasproperty(o::T, name::Symbol) where {T<:OpenAPIModel} = ((name in propertynames(T)) && (getproperty(o, name) !== nothing))
-function setproperty!(o::T, name::Symbol, val) where {T<:OpenAPIModel}
+getproperty(o::T, name::Symbol) where {T<:APIModel} = getfield(o, field_name(T,name))
+hasproperty(o::T, name::Symbol) where {T<:APIModel} = ((name in propertynames(T)) && (getproperty(o, name) !== nothing))
+function setproperty!(o::T, name::Symbol, val) where {T<:APIModel}
     validate_property(T, name, val)
     fieldtype = property_type(T, name)
     fieldname = field_name(T, name)
@@ -433,7 +435,7 @@ function setproperty!(o::T, name::Symbol, val) where {T<:OpenAPIModel}
     end
 end
 
-function getpropertyat(o::T, path...) where {T<:OpenAPIModel}
+function getpropertyat(o::T, path...) where {T<:APIModel}
     val = getproperty(o, Symbol(path[1]))
     rempath = path[2:end]
     (length(rempath) == 0) && (return val)
@@ -451,7 +453,7 @@ function getpropertyat(o::T, path...) where {T<:OpenAPIModel}
     getpropertyat(val, rempath...)
 end
 
-function haspropertyat(o::T, path...) where {T<:OpenAPIModel}
+function haspropertyat(o::T, path...) where {T<:APIModel}
     p1 = Symbol(path[1])
     ret = hasproperty(o, p1)
     rempath = path[2:end]
@@ -474,11 +476,11 @@ function haspropertyat(o::T, path...) where {T<:OpenAPIModel}
     haspropertyat(val, rempath...)
 end
 
-convert(::Type{T}, json::Dict{String,Any}) where {T<:OpenAPIModel} = from_json(T, json)
-convert(::Type{T}, v::Nothing) where {T<:OpenAPIModel} = T()
+convert(::Type{T}, json::Dict{String,Any}) where {T<:APIModel} = from_json(T, json)
+convert(::Type{T}, v::Nothing) where {T<:APIModel} = T()
 
-show(io::IO, model::T) where {T<:OpenAPIModel} = print(io, JSON.json(model, 2))
-summary(model::T) where {T<:OpenAPIModel} = print(io, T)
+show(io::IO, model::T) where {T<:APIModel} = print(io, JSON.json(model, 2))
+summary(model::T) where {T<:APIModel} = print(io, T)
 
 """
     is_longpoll_timeout(ex::Exception)
@@ -491,6 +493,6 @@ exception values to examine the leaves.
 is_longpoll_timeout(ex) = false
 is_longpoll_timeout(ex::TaskFailedException) = is_longpoll_timeout(ex.task.exception)
 is_longpoll_timeout(ex::CompositeException) = any(is_longpoll_timeout, ex.exceptions)
-function is_longpoll_timeout(ex::OpenAPI.ApiException)
+function is_longpoll_timeout(ex::OpenAPIClient.ApiException)
     ex.status == 200 && match(r"Operation timed out after \d+ milliseconds with \d+ bytes received", ex.reason) !== nothing
 end

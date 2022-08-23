@@ -13,8 +13,8 @@ if isdefined(Base, :hasproperty)
 end
 import JSON: lower
 
-abstract type OpenAPIModel end
-abstract type OpenAPIApi end
+abstract type APIModel end
+abstract type APIImpl end
 
 include("client.jl")
 include("json.jl")
