@@ -5,6 +5,7 @@ using URIs
 using JSON
 using MbedTLS
 using Dates
+using TimeZones
 using LibCURL
 
 import Base: convert, show, summary, getindex, keys, length, getproperty, setproperty!, propertynames, iterate

@@ -8,24 +8,36 @@ const COLL_TSV = "tsv"
 const COLL_CSV = "csv"
 const COLL_DLM = Dict{String,String}([COLL_PIPES=>"|", COLL_SSV=>" ", COLL_TSV=>"\t", COLL_CSV=>",", COLL_MULTI=>","])
 
-const DATETIME_FORMATS = (Dates.DateFormat("yyyy-mm-dd HH:MM:SS.sss"), Dates.DateFormat("yyyy-mm-ddTHH:MM:SS.sss"), Dates.DateFormat("yyyy-mm-ddTHH:MM:SSZ"))
-const DATE_FORMATS = (Dates.DateFormat("yyyy-mm-dd"),)
+const DATETIME_FORMATS = [
+    Dates.DateFormat("yyyy-mm-dd"),
+    Dates.DateFormat("yyyy-mm-dd HH:MM:SS"),
+    Dates.DateFormat("yyyy-mm-ddTHH:MM:SS"),
+    Dates.DateFormat("yyyy-mm-dd HH:MM:SSzzz"),
+    Dates.DateFormat("yyyy-mm-ddTHH:MM:SSzzz"),
+    Dates.DateFormat("yyyy-mm-dd HH:MM:SS.sss"),
+    Dates.DateFormat("yyyy-mm-ddTHH:MM:SS.sss"),
+    Dates.DateFormat("yyyy-mm-dd HH:MM:SS.sssZ"),
+    Dates.DateFormat("yyyy-mm-ddTHH:MM:SS.sssZ"),
+    Dates.DateFormat("yyyy-mm-dd HH:MM:SS.ssszzz"),
+    Dates.DateFormat("yyyy-mm-ddTHH:MM:SS.ssszzz"),
+]
 
 const DEFAULT_TIMEOUT_SECS = 5*60
 const DEFAULT_LONGPOLL_TIMEOUT_SECS = 15*60
 
-function convert(::Type{DateTime}, str::String)
-    # strip off timezone, as Julia DateTime does not parse it
-    if '+' in str
-        str = split(str, '+')[1]
-    end
-    # truncate micro/nano seconds to milliseconds, as Julia DateTime does not parse it
-    if '.' in str
-        uptosec,subsec = split(str, '.')
-        if length(subsec) > 3
-            str = uptosec * "." * subsec[1:3]
+function Base.convert(::Type{ZonedDateTime}, str::String)
+    for fmt in DATETIME_FORMATS
+        try
+            return ZonedDateTime(str, fmt)
+        catch
+            # try next format
         end
     end
+    return ZonedDateTime(convert(DateTime, str), localzone())
+    throw(OpenAPIException("Unsupported ZonedDateTime format: $str"))
+end
+
+function Base.convert(::Type{DateTime}, str::String)
     for fmt in DATETIME_FORMATS
         try
             return DateTime(str, fmt)
@@ -36,7 +48,7 @@ function convert(::Type{DateTime}, str::String)
     throw(OpenAPIException("Unsupported DateTime format: $str"))
 end
 
-function convert(::Type{Date}, str::String)
+function Base.convert(::Type{Date}, str::String)
     for fmt in DATETIME_FORMATS
         try
             return Date(str, fmt)
@@ -76,6 +88,7 @@ struct Client
     downloader::Downloader
     timeout::Ref{Int}
     pre_request_hook::Function  # user provided hook to modify the request before it is sent
+    long_polling_timeout::Int
 
     function Client(root::String;
             headers::Dict{String,String}=Dict{String,String}(),
@@ -88,7 +101,7 @@ struct Client
         downloader.easy_hook = (easy, opts) -> begin
             Downloads.Curl.setopt(easy, LibCURL.CURLOPT_LOW_SPEED_TIME, long_polling_timeout)
         end
-        new(root, headers, get_return_type, clntoptions, downloader, Ref{Int}(timeout), pre_request_hook)
+        new(root, headers, get_return_type, clntoptions, downloader, Ref{Int}(timeout), pre_request_hook, long_polling_timeout)
     end
 end
 
@@ -132,7 +145,7 @@ struct Ctx
     file::Dict{String,String}
     body::Any
     timeout::Int
-    curl_mime_upload::Any
+    curl_mime_upload::Ref{Any}
     pre_request_hook::Function
 
     function Ctx(client::Client, method::String, return_type, resource::String, auth, body=nothing;
@@ -140,7 +153,7 @@ struct Ctx
             pre_request_hook::Function=client.pre_request_hook)
         resource = client.root * resource
         headers = copy(client.headers)
-        new(client, method, return_type, resource, auth, Dict{String,String}(), Dict{String,String}(), headers, Dict{String,String}(), Dict{String,String}(), body, timeout, nothing, pre_request_hook)
+        new(client, method, return_type, resource, auth, Dict{String,String}(), Dict{String,String}(), headers, Dict{String,String}(), Dict{String,String}(), body, timeout, Ref{Any}(nothing), pre_request_hook)
     end
 end
 
@@ -206,8 +219,12 @@ function prep_args(ctx::Ctx)
         # until we have something like https://github.com/JuliaLang/Downloads.jl/pull/148
         downloader = Downloads.Downloader()
         downloader.easy_hook = (easy, opts) -> begin
-            Downloads.Curl.setopt(easy, LibCURL.CURLOPT_LOW_SPEED_TIME, long_polling_timeout)
-            mime = LibCURL.curl_mime_init(easy)
+            Downloads.Curl.setopt(easy, LibCURL.CURLOPT_LOW_SPEED_TIME, ctx.client.long_polling_timeout)
+            mime = ctx.curl_mime_upload[]
+            if mime === nothing
+                mime = LibCURL.curl_mime_init(easy.handle)
+                ctx.curl_mime_upload[] = mime
+            end
             for (_k,_v) in ctx.file
                 part = LibCURL.curl_mime_addpart(mime)
                 LibCURL.curl_mime_name(part, _k)
@@ -217,7 +234,6 @@ function prep_args(ctx::Ctx)
             Downloads.Curl.setopt(easy, LibCURL.CURLOPT_MIMEPOST, mime)
         end
         kwargs[:downloader] = downloader
-        ctx.curl_mime_upload = mime
     end
 
     if ctx.body !== nothing
@@ -382,9 +398,9 @@ function do_request(ctx::Ctx, stream::Bool=false; stream_to::Union{Channel,Nothi
             close(output)
         end
     finally
-        if ctx.curl_mime_upload !== nothing
-            LibCURL.curl_mime_free(ctx.curl_mime_upload)
-            ctx.curl_mime_upload = nothing
+        if ctx.curl_mime_upload[] !== nothing
+            LibCURL.curl_mime_free(ctx.curl_mime_upload[])
+            ctx.curl_mime_upload[] = nothing
         end
     end
 
