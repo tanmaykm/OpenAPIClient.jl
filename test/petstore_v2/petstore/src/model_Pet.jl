@@ -19,29 +19,22 @@
     - tags::Vector{Tag}
     - status::String : pet status in the store
 """
-mutable struct Pet <: OpenAPIClient.APIModel
-    id::Any # spec type: Union{ Nothing, Int64 } # spec name: id
-    category::Any # spec type: Union{ Nothing, Category } # spec name: category
-    name::Any # spec type: Union{ Nothing, String } # spec name: name
-    photoUrls::Any # spec type: Union{ Nothing, Vector{String} } # spec name: photoUrls
-    tags::Any # spec type: Union{ Nothing, Vector{Tag} } # spec name: tags
-    status::Any # spec type: Union{ Nothing, String } # spec name: status
+Base.@kwdef mutable struct Pet <: OpenAPIClient.APIModel
+    id::Any = nothing # spec type: Union{ Nothing, Int64 } # spec name: id
+    category::Any = nothing # spec type: Union{ Nothing, Category } # spec name: category
+    name::Any = nothing # spec type: Union{ Nothing, String } # spec name: name
+    photoUrls::Any = nothing # spec type: Union{ Nothing, Vector{String} } # spec name: photoUrls
+    tags::Any = nothing # spec type: Union{ Nothing, Vector{Tag} } # spec name: tags
+    status::Any = nothing # spec type: Union{ Nothing, String } # spec name: status
 
-    function Pet(;id=nothing, category=nothing, name=nothing, photoUrls=nothing, tags=nothing, status=nothing, )
-        o = new()
+    function Pet(id, category, name, photoUrls, tags, status, )
         validate_property(Pet, Symbol("id"), id)
-        setfield!(o, Symbol("id"), id)
         validate_property(Pet, Symbol("category"), category)
-        setfield!(o, Symbol("category"), category)
         validate_property(Pet, Symbol("name"), name)
-        setfield!(o, Symbol("name"), name)
         validate_property(Pet, Symbol("photoUrls"), photoUrls)
-        setfield!(o, Symbol("photoUrls"), photoUrls)
         validate_property(Pet, Symbol("tags"), tags)
-        setfield!(o, Symbol("tags"), tags)
         validate_property(Pet, Symbol("status"), status)
-        setfield!(o, Symbol("status"), status)
-        o
+        return new(id, category, name, photoUrls, tags, status, )
     end
 end # type Pet
 

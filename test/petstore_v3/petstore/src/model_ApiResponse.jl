@@ -14,20 +14,16 @@
     - type::String
     - message::String
 """
-mutable struct ApiResponse <: OpenAPIClient.APIModel
-    code::Any # spec type: Union{ Nothing, Int32 } # spec name: code
-    type::Any # spec type: Union{ Nothing, String } # spec name: type
-    message::Any # spec type: Union{ Nothing, String } # spec name: message
+Base.@kwdef mutable struct ApiResponse <: OpenAPIClient.APIModel
+    code::Any = nothing # spec type: Union{ Nothing, Int32 } # spec name: code
+    type::Any = nothing # spec type: Union{ Nothing, String } # spec name: type
+    message::Any = nothing # spec type: Union{ Nothing, String } # spec name: message
 
-    function ApiResponse(;code=nothing, type=nothing, message=nothing, )
-        o = new()
+    function ApiResponse(code, type, message, )
         validate_property(ApiResponse, Symbol("code"), code)
-        setfield!(o, Symbol("code"), code)
         validate_property(ApiResponse, Symbol("type"), type)
-        setfield!(o, Symbol("type"), type)
         validate_property(ApiResponse, Symbol("message"), message)
-        setfield!(o, Symbol("message"), message)
-        o
+        return new(code, type, message, )
     end
 end # type ApiResponse
 

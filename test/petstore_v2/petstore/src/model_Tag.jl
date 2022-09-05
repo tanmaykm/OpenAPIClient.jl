@@ -11,17 +11,14 @@
     - id::Int64
     - name::String
 """
-mutable struct Tag <: OpenAPIClient.APIModel
-    id::Any # spec type: Union{ Nothing, Int64 } # spec name: id
-    name::Any # spec type: Union{ Nothing, String } # spec name: name
+Base.@kwdef mutable struct Tag <: OpenAPIClient.APIModel
+    id::Any = nothing # spec type: Union{ Nothing, Int64 } # spec name: id
+    name::Any = nothing # spec type: Union{ Nothing, String } # spec name: name
 
-    function Tag(;id=nothing, name=nothing, )
-        o = new()
+    function Tag(id, name, )
         validate_property(Tag, Symbol("id"), id)
-        setfield!(o, Symbol("id"), id)
         validate_property(Tag, Symbol("name"), name)
-        setfield!(o, Symbol("name"), name)
-        o
+        return new(id, name, )
     end
 end # type Tag
 

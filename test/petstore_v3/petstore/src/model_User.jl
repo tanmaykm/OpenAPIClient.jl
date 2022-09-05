@@ -24,35 +24,26 @@
     - phone::String
     - userStatus::Int32 : User Status
 """
-mutable struct User <: OpenAPIClient.APIModel
-    id::Any # spec type: Union{ Nothing, Int64 } # spec name: id
-    username::Any # spec type: Union{ Nothing, String } # spec name: username
-    firstName::Any # spec type: Union{ Nothing, String } # spec name: firstName
-    lastName::Any # spec type: Union{ Nothing, String } # spec name: lastName
-    email::Any # spec type: Union{ Nothing, String } # spec name: email
-    password::Any # spec type: Union{ Nothing, String } # spec name: password
-    phone::Any # spec type: Union{ Nothing, String } # spec name: phone
-    userStatus::Any # spec type: Union{ Nothing, Int32 } # spec name: userStatus
+Base.@kwdef mutable struct User <: OpenAPIClient.APIModel
+    id::Any = nothing # spec type: Union{ Nothing, Int64 } # spec name: id
+    username::Any = nothing # spec type: Union{ Nothing, String } # spec name: username
+    firstName::Any = nothing # spec type: Union{ Nothing, String } # spec name: firstName
+    lastName::Any = nothing # spec type: Union{ Nothing, String } # spec name: lastName
+    email::Any = nothing # spec type: Union{ Nothing, String } # spec name: email
+    password::Any = nothing # spec type: Union{ Nothing, String } # spec name: password
+    phone::Any = nothing # spec type: Union{ Nothing, String } # spec name: phone
+    userStatus::Any = nothing # spec type: Union{ Nothing, Int32 } # spec name: userStatus
 
-    function User(;id=nothing, username=nothing, firstName=nothing, lastName=nothing, email=nothing, password=nothing, phone=nothing, userStatus=nothing, )
-        o = new()
+    function User(id, username, firstName, lastName, email, password, phone, userStatus, )
         validate_property(User, Symbol("id"), id)
-        setfield!(o, Symbol("id"), id)
         validate_property(User, Symbol("username"), username)
-        setfield!(o, Symbol("username"), username)
         validate_property(User, Symbol("firstName"), firstName)
-        setfield!(o, Symbol("firstName"), firstName)
         validate_property(User, Symbol("lastName"), lastName)
-        setfield!(o, Symbol("lastName"), lastName)
         validate_property(User, Symbol("email"), email)
-        setfield!(o, Symbol("email"), email)
         validate_property(User, Symbol("password"), password)
-        setfield!(o, Symbol("password"), password)
         validate_property(User, Symbol("phone"), phone)
-        setfield!(o, Symbol("phone"), phone)
         validate_property(User, Symbol("userStatus"), userStatus)
-        setfield!(o, Symbol("userStatus"), userStatus)
-        o
+        return new(id, username, firstName, lastName, email, password, phone, userStatus, )
     end
 end # type User
 

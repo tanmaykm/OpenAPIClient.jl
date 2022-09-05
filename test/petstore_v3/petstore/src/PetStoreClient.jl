@@ -15,17 +15,19 @@ include("api_PetApi.jl")
 include("api_StoreApi.jl")
 include("api_UserApi.jl")
 
-# export models
-export convert, ApiResponse
-export convert, Category
-export convert, Order
-export convert, Pet
-export convert, Tag
-export convert, User
-
-# export operations
-export convert, PetApi, StoreApi, UserApi
-
 export check_required, field_name, property_type, hasproperty, propertynames, validate_property, convert
 
-end
+# export models
+export ApiResponse
+export Category
+export Order
+export Pet
+export Tag
+export User
+
+# export operations
+export PetApi
+export StoreApi
+export UserApi
+
+end # module PetStoreClient

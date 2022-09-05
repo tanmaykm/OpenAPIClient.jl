@@ -12,17 +12,14 @@
     - id::Int64
     - name::String
 """
-mutable struct Category <: OpenAPIClient.APIModel
-    id::Any # spec type: Union{ Nothing, Int64 } # spec name: id
-    name::Any # spec type: Union{ Nothing, String } # spec name: name
+Base.@kwdef mutable struct Category <: OpenAPIClient.APIModel
+    id::Any = nothing # spec type: Union{ Nothing, Int64 } # spec name: id
+    name::Any = nothing # spec type: Union{ Nothing, String } # spec name: name
 
-    function Category(;id=nothing, name=nothing, )
-        o = new()
+    function Category(id, name, )
         validate_property(Category, Symbol("id"), id)
-        setfield!(o, Symbol("id"), id)
         validate_property(Category, Symbol("name"), name)
-        setfield!(o, Symbol("name"), name)
-        o
+        return new(id, name, )
     end
 end # type Category
 

@@ -19,29 +19,22 @@
     - status::String : Order Status
     - complete::Bool
 """
-mutable struct Order <: OpenAPIClient.APIModel
-    id::Any # spec type: Union{ Nothing, Int64 } # spec name: id
-    petId::Any # spec type: Union{ Nothing, Int64 } # spec name: petId
-    quantity::Any # spec type: Union{ Nothing, Int32 } # spec name: quantity
-    shipDate::Any # spec type: Union{ Nothing, ZonedDateTime } # spec name: shipDate
-    status::Any # spec type: Union{ Nothing, String } # spec name: status
-    complete::Any # spec type: Union{ Nothing, Bool } # spec name: complete
+Base.@kwdef mutable struct Order <: OpenAPIClient.APIModel
+    id::Any = nothing # spec type: Union{ Nothing, Int64 } # spec name: id
+    petId::Any = nothing # spec type: Union{ Nothing, Int64 } # spec name: petId
+    quantity::Any = nothing # spec type: Union{ Nothing, Int32 } # spec name: quantity
+    shipDate::Any = nothing # spec type: Union{ Nothing, ZonedDateTime } # spec name: shipDate
+    status::Any = nothing # spec type: Union{ Nothing, String } # spec name: status
+    complete::Any = nothing # spec type: Union{ Nothing, Bool } # spec name: complete
 
-    function Order(;id=nothing, petId=nothing, quantity=nothing, shipDate=nothing, status=nothing, complete=nothing, )
-        o = new()
+    function Order(id, petId, quantity, shipDate, status, complete, )
         validate_property(Order, Symbol("id"), id)
-        setfield!(o, Symbol("id"), id)
         validate_property(Order, Symbol("petId"), petId)
-        setfield!(o, Symbol("petId"), petId)
         validate_property(Order, Symbol("quantity"), quantity)
-        setfield!(o, Symbol("quantity"), quantity)
         validate_property(Order, Symbol("shipDate"), shipDate)
-        setfield!(o, Symbol("shipDate"), shipDate)
         validate_property(Order, Symbol("status"), status)
-        setfield!(o, Symbol("status"), status)
         validate_property(Order, Symbol("complete"), complete)
-        setfield!(o, Symbol("complete"), complete)
-        o
+        return new(id, petId, quantity, shipDate, status, complete, )
     end
 end # type Order
 
