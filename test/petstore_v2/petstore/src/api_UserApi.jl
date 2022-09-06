@@ -5,7 +5,7 @@ struct UserApi <: OpenAPIClient.APIImpl
     client::OpenAPIClient.Client
 end
 
-function _oacinternal_createUser(_api::UserApi, in_body; _mediaType=nothing)
+function _oacinternal_createUser(_api::UserApi, in_body::User; _mediaType=nothing)
     _ctx = OpenAPIClient.Ctx(_api.client, "POST", Nothing, "/user", [], in_body)
     OpenAPIClient.set_header_accept(_ctx, [])
     OpenAPIClient.set_header_content_type(_ctx, (_mediaType === nothing) ? ["application/json", ] : [_mediaType])
@@ -26,12 +26,12 @@ function createUser(_api::UserApi, in_body; _mediaType=nothing)
     OpenAPIClient.exec(_ctx)
 end
 
-function createUser(_api::UserApi, response_stream::Channel, in_body; _mediaType=nothing)
+function createUser(_api::UserApi, response_stream::Channel, in_body::User; _mediaType=nothing)
     _ctx = _oacinternal_createUser(_api, in_body; _mediaType=_mediaType)
     OpenAPIClient.exec(_ctx, response_stream)
 end
 
-function _oacinternal_createUsersWithArrayInput(_api::UserApi, in_body; _mediaType=nothing)
+function _oacinternal_createUsersWithArrayInput(_api::UserApi, in_body::Vector{User}; _mediaType=nothing)
     _ctx = OpenAPIClient.Ctx(_api.client, "POST", Nothing, "/user/createWithArray", [], in_body)
     OpenAPIClient.set_header_accept(_ctx, [])
     OpenAPIClient.set_header_content_type(_ctx, (_mediaType === nothing) ? ["application/json", ] : [_mediaType])
@@ -50,12 +50,12 @@ function createUsersWithArrayInput(_api::UserApi, in_body; _mediaType=nothing)
     OpenAPIClient.exec(_ctx)
 end
 
-function createUsersWithArrayInput(_api::UserApi, response_stream::Channel, in_body; _mediaType=nothing)
+function createUsersWithArrayInput(_api::UserApi, response_stream::Channel, in_body::Vector{User}; _mediaType=nothing)
     _ctx = _oacinternal_createUsersWithArrayInput(_api, in_body; _mediaType=_mediaType)
     OpenAPIClient.exec(_ctx, response_stream)
 end
 
-function _oacinternal_createUsersWithListInput(_api::UserApi, in_body; _mediaType=nothing)
+function _oacinternal_createUsersWithListInput(_api::UserApi, in_body::Vector{User}; _mediaType=nothing)
     _ctx = OpenAPIClient.Ctx(_api.client, "POST", Nothing, "/user/createWithList", [], in_body)
     OpenAPIClient.set_header_accept(_ctx, [])
     OpenAPIClient.set_header_content_type(_ctx, (_mediaType === nothing) ? ["application/json", ] : [_mediaType])
@@ -74,7 +74,7 @@ function createUsersWithListInput(_api::UserApi, in_body; _mediaType=nothing)
     OpenAPIClient.exec(_ctx)
 end
 
-function createUsersWithListInput(_api::UserApi, response_stream::Channel, in_body; _mediaType=nothing)
+function createUsersWithListInput(_api::UserApi, response_stream::Channel, in_body::Vector{User}; _mediaType=nothing)
     _ctx = _oacinternal_createUsersWithListInput(_api, in_body; _mediaType=_mediaType)
     OpenAPIClient.exec(_ctx, response_stream)
 end
@@ -181,7 +181,7 @@ function logoutUser(_api::UserApi, response_stream::Channel; _mediaType=nothing)
     OpenAPIClient.exec(_ctx, response_stream)
 end
 
-function _oacinternal_updateUser(_api::UserApi, in_username::String, in_body; _mediaType=nothing)
+function _oacinternal_updateUser(_api::UserApi, in_username::String, in_body::User; _mediaType=nothing)
     _ctx = OpenAPIClient.Ctx(_api.client, "PUT", Nothing, "/user/{username}", [], in_body)
     OpenAPIClient.set_param(_ctx.path, "username", in_username)  # type String
     OpenAPIClient.set_header_accept(_ctx, [])
@@ -204,7 +204,7 @@ function updateUser(_api::UserApi, in_username, in_body; _mediaType=nothing)
     OpenAPIClient.exec(_ctx)
 end
 
-function updateUser(_api::UserApi, response_stream::Channel, in_username::String, in_body; _mediaType=nothing)
+function updateUser(_api::UserApi, response_stream::Channel, in_username::String, in_body::User; _mediaType=nothing)
     _ctx = _oacinternal_updateUser(_api, in_username, in_body; _mediaType=_mediaType)
     OpenAPIClient.exec(_ctx, response_stream)
 end

@@ -6,7 +6,7 @@ module PetStoreClient
 using Random
 using Dates, TimeZones
 using OpenAPIClient
-import OpenAPIClient: field_name, property_type, hasproperty, validate_property, APIImpl, APIModel
+import OpenAPIClient: property_type, hasproperty, validate_property, APIImpl, APIModel
 import Base: convert, propertynames
 
 include("modelincludes.jl")
@@ -15,7 +15,7 @@ include("api_PetApi.jl")
 include("api_StoreApi.jl")
 include("api_UserApi.jl")
 
-export check_required, field_name, property_type, hasproperty, propertynames, validate_property, convert
+export check_required
 
 # export models
 export ApiResponse

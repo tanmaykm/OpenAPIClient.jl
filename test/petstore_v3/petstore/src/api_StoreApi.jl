@@ -87,7 +87,7 @@ function getOrderById(_api::StoreApi, response_stream::Channel, in_orderId::Int6
     OpenAPIClient.exec(_ctx, response_stream)
 end
 
-function _oacinternal_placeOrder(_api::StoreApi, in_Order; _mediaType=nothing)
+function _oacinternal_placeOrder(_api::StoreApi, in_Order::Order; _mediaType=nothing)
     _ctx = OpenAPIClient.Ctx(_api.client, "POST", Order, "/store/order", [], in_Order)
     OpenAPIClient.set_header_accept(_ctx, ["application/xml", "application/json", ])
     OpenAPIClient.set_header_content_type(_ctx, (_mediaType === nothing) ? ["application/json", ] : [_mediaType])
@@ -106,7 +106,7 @@ function placeOrder(_api::StoreApi, in_Order; _mediaType=nothing)
     OpenAPIClient.exec(_ctx)
 end
 
-function placeOrder(_api::StoreApi, response_stream::Channel, in_Order; _mediaType=nothing)
+function placeOrder(_api::StoreApi, response_stream::Channel, in_Order::Order; _mediaType=nothing)
     _ctx = _oacinternal_placeOrder(_api, in_Order; _mediaType=_mediaType)
     OpenAPIClient.exec(_ctx, response_stream)
 end

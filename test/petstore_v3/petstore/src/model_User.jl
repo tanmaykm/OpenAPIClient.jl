@@ -25,14 +25,14 @@
     - userStatus::Int32 : User Status
 """
 Base.@kwdef mutable struct User <: OpenAPIClient.APIModel
-    id::Any = nothing # spec type: Union{ Nothing, Int64 } # spec name: id
-    username::Any = nothing # spec type: Union{ Nothing, String } # spec name: username
-    firstName::Any = nothing # spec type: Union{ Nothing, String } # spec name: firstName
-    lastName::Any = nothing # spec type: Union{ Nothing, String } # spec name: lastName
-    email::Any = nothing # spec type: Union{ Nothing, String } # spec name: email
-    password::Any = nothing # spec type: Union{ Nothing, String } # spec name: password
-    phone::Any = nothing # spec type: Union{ Nothing, String } # spec name: phone
-    userStatus::Any = nothing # spec type: Union{ Nothing, Int32 } # spec name: userStatus
+    id = nothing # spec type: Union{ Nothing, Int64 }
+    username = nothing # spec type: Union{ Nothing, String }
+    firstName = nothing # spec type: Union{ Nothing, String }
+    lastName = nothing # spec type: Union{ Nothing, String }
+    email = nothing # spec type: Union{ Nothing, String }
+    password = nothing # spec type: Union{ Nothing, String }
+    phone = nothing # spec type: Union{ Nothing, String }
+    userStatus = nothing # spec type: Union{ Nothing, Int32 }
 
     function User(id, username, firstName, lastName, email, password, phone, userStatus, )
         validate_property(User, Symbol("id"), id)
@@ -47,11 +47,8 @@ Base.@kwdef mutable struct User <: OpenAPIClient.APIModel
     end
 end # type User
 
-const _property_map_User = Dict{Symbol,Symbol}(Symbol("id")=>Symbol("id"), Symbol("username")=>Symbol("username"), Symbol("firstName")=>Symbol("firstName"), Symbol("lastName")=>Symbol("lastName"), Symbol("email")=>Symbol("email"), Symbol("password")=>Symbol("password"), Symbol("phone")=>Symbol("phone"), Symbol("userStatus")=>Symbol("userStatus"), )
 const _property_types_User = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("username")=>"String", Symbol("firstName")=>"String", Symbol("lastName")=>"String", Symbol("email")=>"String", Symbol("password")=>"String", Symbol("phone")=>"String", Symbol("userStatus")=>"Int32", )
-Base.propertynames(::Type{ User }) = collect(keys(_property_map_User))
 OpenAPIClient.property_type(::Type{ User }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_User[name]))}
-OpenAPIClient.field_name(::Type{ User }, property_name::Symbol) =  _property_map_User[property_name]
 
 function check_required(o::User)
     true

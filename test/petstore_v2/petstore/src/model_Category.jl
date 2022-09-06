@@ -12,8 +12,8 @@
     - name::String
 """
 Base.@kwdef mutable struct Category <: OpenAPIClient.APIModel
-    id::Any = nothing # spec type: Union{ Nothing, Int64 } # spec name: id
-    name::Any = nothing # spec type: Union{ Nothing, String } # spec name: name
+    id = nothing # spec type: Union{ Nothing, Int64 }
+    name = nothing # spec type: Union{ Nothing, String }
 
     function Category(id, name, )
         validate_property(Category, Symbol("id"), id)
@@ -22,11 +22,8 @@ Base.@kwdef mutable struct Category <: OpenAPIClient.APIModel
     end
 end # type Category
 
-const _property_map_Category = Dict{Symbol,Symbol}(Symbol("id")=>Symbol("id"), Symbol("name")=>Symbol("name"), )
 const _property_types_Category = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", )
-Base.propertynames(::Type{ Category }) = collect(keys(_property_map_Category))
 OpenAPIClient.property_type(::Type{ Category }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_Category[name]))}
-OpenAPIClient.field_name(::Type{ Category }, property_name::Symbol) =  _property_map_Category[property_name]
 
 function check_required(o::Category)
     true

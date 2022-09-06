@@ -14,9 +14,9 @@
     - message::String
 """
 Base.@kwdef mutable struct ApiResponse <: OpenAPIClient.APIModel
-    code::Any = nothing # spec type: Union{ Nothing, Int32 } # spec name: code
-    type::Any = nothing # spec type: Union{ Nothing, String } # spec name: type
-    message::Any = nothing # spec type: Union{ Nothing, String } # spec name: message
+    code = nothing # spec type: Union{ Nothing, Int32 }
+    type = nothing # spec type: Union{ Nothing, String }
+    message = nothing # spec type: Union{ Nothing, String }
 
     function ApiResponse(code, type, message, )
         validate_property(ApiResponse, Symbol("code"), code)
@@ -26,11 +26,8 @@ Base.@kwdef mutable struct ApiResponse <: OpenAPIClient.APIModel
     end
 end # type ApiResponse
 
-const _property_map_ApiResponse = Dict{Symbol,Symbol}(Symbol("code")=>Symbol("code"), Symbol("type")=>Symbol("type"), Symbol("message")=>Symbol("message"), )
 const _property_types_ApiResponse = Dict{Symbol,String}(Symbol("code")=>"Int32", Symbol("type")=>"String", Symbol("message")=>"String", )
-Base.propertynames(::Type{ ApiResponse }) = collect(keys(_property_map_ApiResponse))
 OpenAPIClient.property_type(::Type{ ApiResponse }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_ApiResponse[name]))}
-OpenAPIClient.field_name(::Type{ ApiResponse }, property_name::Symbol) =  _property_map_ApiResponse[property_name]
 
 function check_required(o::ApiResponse)
     true

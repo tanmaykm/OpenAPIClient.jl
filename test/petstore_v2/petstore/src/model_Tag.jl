@@ -12,8 +12,8 @@
     - name::String
 """
 Base.@kwdef mutable struct Tag <: OpenAPIClient.APIModel
-    id::Any = nothing # spec type: Union{ Nothing, Int64 } # spec name: id
-    name::Any = nothing # spec type: Union{ Nothing, String } # spec name: name
+    id = nothing # spec type: Union{ Nothing, Int64 }
+    name = nothing # spec type: Union{ Nothing, String }
 
     function Tag(id, name, )
         validate_property(Tag, Symbol("id"), id)
@@ -22,11 +22,8 @@ Base.@kwdef mutable struct Tag <: OpenAPIClient.APIModel
     end
 end # type Tag
 
-const _property_map_Tag = Dict{Symbol,Symbol}(Symbol("id")=>Symbol("id"), Symbol("name")=>Symbol("name"), )
 const _property_types_Tag = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", )
-Base.propertynames(::Type{ Tag }) = collect(keys(_property_map_Tag))
 OpenAPIClient.property_type(::Type{ Tag }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_Tag[name]))}
-OpenAPIClient.field_name(::Type{ Tag }, property_name::Symbol) =  _property_map_Tag[property_name]
 
 function check_required(o::Tag)
     true
