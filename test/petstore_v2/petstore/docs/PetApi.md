@@ -15,8 +15,8 @@ Method | HTTP request | Description
 
 
 # **addPet**
-> addPet(_api::PetApi, in_body; _mediaType=nothing) <br/>
-> addPet(_api::PetApi, response_stream::Channel, in_body; _mediaType=nothing)
+> addPet(_api::PetApi, in_body::Pet; _mediaType=nothing) <br/>
+> addPet(_api::PetApi, response_stream::Channel, in_body::Pet; _mediaType=nothing)
 
 Add a new pet to the store
 
@@ -167,8 +167,8 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updatePet**
-> updatePet(_api::PetApi, in_body; _mediaType=nothing) <br/>
-> updatePet(_api::PetApi, response_stream::Channel, in_body; _mediaType=nothing)
+> updatePet(_api::PetApi, in_body::Pet; _mediaType=nothing) <br/>
+> updatePet(_api::PetApi, response_stream::Channel, in_body::Pet; _mediaType=nothing)
 
 Update an existing pet
 

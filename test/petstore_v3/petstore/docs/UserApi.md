@@ -15,8 +15,8 @@ Method | HTTP request | Description
 
 
 # **createUser**
-> createUser(_api::UserApi, in_User; _mediaType=nothing) <br/>
-> createUser(_api::UserApi, response_stream::Channel, in_User; _mediaType=nothing)
+> createUser(_api::UserApi, in_User::User; _mediaType=nothing) <br/>
+> createUser(_api::UserApi, response_stream::Channel, in_User::User; _mediaType=nothing)
 
 Create user
 
@@ -45,8 +45,8 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **createUsersWithArrayInput**
-> createUsersWithArrayInput(_api::UserApi, in_User; _mediaType=nothing) <br/>
-> createUsersWithArrayInput(_api::UserApi, response_stream::Channel, in_User; _mediaType=nothing)
+> createUsersWithArrayInput(_api::UserApi, in_User::Vector{User}; _mediaType=nothing) <br/>
+> createUsersWithArrayInput(_api::UserApi, response_stream::Channel, in_User::Vector{User}; _mediaType=nothing)
 
 Creates list of users with given input array
 
@@ -73,8 +73,8 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **createUsersWithListInput**
-> createUsersWithListInput(_api::UserApi, in_User; _mediaType=nothing) <br/>
-> createUsersWithListInput(_api::UserApi, response_stream::Channel, in_User; _mediaType=nothing)
+> createUsersWithListInput(_api::UserApi, in_User::Vector{User}; _mediaType=nothing) <br/>
+> createUsersWithListInput(_api::UserApi, response_stream::Channel, in_User::Vector{User}; _mediaType=nothing)
 
 Creates list of users with given input array
 
@@ -212,8 +212,8 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updateUser**
-> updateUser(_api::UserApi, in_username::String, in_User; _mediaType=nothing) <br/>
-> updateUser(_api::UserApi, response_stream::Channel, in_username::String, in_User; _mediaType=nothing)
+> updateUser(_api::UserApi, in_username::String, in_User::User; _mediaType=nothing) <br/>
+> updateUser(_api::UserApi, response_stream::Channel, in_username::String, in_User::User; _mediaType=nothing)
 
 Updated user
 

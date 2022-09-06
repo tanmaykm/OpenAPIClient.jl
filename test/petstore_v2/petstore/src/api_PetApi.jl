@@ -5,7 +5,7 @@ struct PetApi <: OpenAPIClient.APIImpl
     client::OpenAPIClient.Client
 end
 
-function _oacinternal_addPet(_api::PetApi, in_body; _mediaType=nothing)
+function _oacinternal_addPet(_api::PetApi, in_body::Pet; _mediaType=nothing)
     _ctx = OpenAPIClient.Ctx(_api.client, "POST", Nothing, "/pet", ["petstore_auth", ], in_body)
     OpenAPIClient.set_header_accept(_ctx, [])
     OpenAPIClient.set_header_content_type(_ctx, (_mediaType === nothing) ? ["application/json", "application/xml", ] : [_mediaType])
@@ -24,7 +24,7 @@ function addPet(_api::PetApi, in_body; _mediaType=nothing)
     OpenAPIClient.exec(_ctx)
 end
 
-function addPet(_api::PetApi, response_stream::Channel, in_body; _mediaType=nothing)
+function addPet(_api::PetApi, response_stream::Channel, in_body::Pet; _mediaType=nothing)
     _ctx = _oacinternal_addPet(_api, in_body; _mediaType=_mediaType)
     OpenAPIClient.exec(_ctx, response_stream)
 end
@@ -137,7 +137,7 @@ function getPetById(_api::PetApi, response_stream::Channel, in_petId::Int64; _me
     OpenAPIClient.exec(_ctx, response_stream)
 end
 
-function _oacinternal_updatePet(_api::PetApi, in_body; _mediaType=nothing)
+function _oacinternal_updatePet(_api::PetApi, in_body::Pet; _mediaType=nothing)
     _ctx = OpenAPIClient.Ctx(_api.client, "PUT", Nothing, "/pet", ["petstore_auth", ], in_body)
     OpenAPIClient.set_header_accept(_ctx, [])
     OpenAPIClient.set_header_content_type(_ctx, (_mediaType === nothing) ? ["application/json", "application/xml", ] : [_mediaType])
@@ -156,7 +156,7 @@ function updatePet(_api::PetApi, in_body; _mediaType=nothing)
     OpenAPIClient.exec(_ctx)
 end
 
-function updatePet(_api::PetApi, response_stream::Channel, in_body; _mediaType=nothing)
+function updatePet(_api::PetApi, response_stream::Channel, in_body::Pet; _mediaType=nothing)
     _ctx = _oacinternal_updatePet(_api, in_body; _mediaType=_mediaType)
     OpenAPIClient.exec(_ctx, response_stream)
 end

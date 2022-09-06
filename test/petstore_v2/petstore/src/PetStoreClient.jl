@@ -6,7 +6,7 @@ module PetStoreClient
 using Random
 using Dates, TimeZones
 using OpenAPIClient
-import OpenAPIClient: field_name, property_type, hasproperty, validate_property, APIImpl, APIModel
+import OpenAPIClient: property_type, hasproperty, validate_property, APIImpl, APIModel
 import Base: convert, propertynames
 
 include("modelincludes.jl")
@@ -15,17 +15,19 @@ include("api_PetApi.jl")
 include("api_StoreApi.jl")
 include("api_UserApi.jl")
 
+export check_required
+
 # export models
-export convert, ApiResponse
-export convert, Category
-export convert, Order
-export convert, Pet
-export convert, Tag
-export convert, User
+export ApiResponse
+export Category
+export Order
+export Pet
+export Tag
+export User
 
 # export operations
-export convert, PetApi, StoreApi, UserApi
+export PetApi
+export StoreApi
+export UserApi
 
-export check_required, field_name, property_type, hasproperty, propertynames, validate_property, convert
-
-end
+end # module PetStoreClient

@@ -430,24 +430,20 @@ function exec(ctx::Ctx, stream_to::Union{Channel,Nothing}=nothing)
 end
 
 property_type(::Type{T}, name::Symbol) where {T<:APIModel} = error("invalid type $T")
-field_name(::Type{T}, name::Symbol) where {T<:APIModel} = error("invalid type $T")
 
-getproperty(o::T, name::Symbol) where {T<:APIModel} = getfield(o, field_name(T,name))
-hasproperty(o::T, name::Symbol) where {T<:APIModel} = ((name in propertynames(T)) && (getproperty(o, name) !== nothing))
 function setproperty!(o::T, name::Symbol, val) where {T<:APIModel}
     validate_property(T, name, val)
     fieldtype = property_type(T, name)
-    fieldname = field_name(T, name)
 
     if isa(val, fieldtype)
-        return setfield!(o, fieldname, val)
+        return setfield!(o, name, val)
     else
         ftval = try
             convert(fieldtype, val)
         catch
             fieldtype(val)
         end
-        return setfield!(o, fieldname, ftval)
+        return setfield!(o, name, ftval)
     end
 end
 

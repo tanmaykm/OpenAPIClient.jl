@@ -97,8 +97,8 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **placeOrder**
-> placeOrder(_api::StoreApi, in_body; _mediaType=nothing) -> Order  <br/>
-> placeOrder(_api::StoreApi, response_stream::Channel, in_body; _mediaType=nothing) -> Order 
+> placeOrder(_api::StoreApi, in_body::Order; _mediaType=nothing) -> Order  <br/>
+> placeOrder(_api::StoreApi, response_stream::Channel, in_body::Order; _mediaType=nothing) -> Order 
 
 Place an order for a pet
 

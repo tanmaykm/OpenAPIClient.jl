@@ -14,28 +14,21 @@
     - type::String
     - message::String
 """
-mutable struct ApiResponse <: OpenAPIClient.APIModel
-    code::Any # spec type: Union{ Nothing, Int32 } # spec name: code
-    type::Any # spec type: Union{ Nothing, String } # spec name: type
-    message::Any # spec type: Union{ Nothing, String } # spec name: message
+Base.@kwdef mutable struct ApiResponse <: OpenAPIClient.APIModel
+    code = nothing # spec type: Union{ Nothing, Int32 }
+    type = nothing # spec type: Union{ Nothing, String }
+    message = nothing # spec type: Union{ Nothing, String }
 
-    function ApiResponse(;code=nothing, type=nothing, message=nothing, )
-        o = new()
+    function ApiResponse(code, type, message, )
         validate_property(ApiResponse, Symbol("code"), code)
-        setfield!(o, Symbol("code"), code)
         validate_property(ApiResponse, Symbol("type"), type)
-        setfield!(o, Symbol("type"), type)
         validate_property(ApiResponse, Symbol("message"), message)
-        setfield!(o, Symbol("message"), message)
-        o
+        return new(code, type, message, )
     end
 end # type ApiResponse
 
-const _property_map_ApiResponse = Dict{Symbol,Symbol}(Symbol("code")=>Symbol("code"), Symbol("type")=>Symbol("type"), Symbol("message")=>Symbol("message"), )
 const _property_types_ApiResponse = Dict{Symbol,String}(Symbol("code")=>"Int32", Symbol("type")=>"String", Symbol("message")=>"String", )
-Base.propertynames(::Type{ ApiResponse }) = collect(keys(_property_map_ApiResponse))
 OpenAPIClient.property_type(::Type{ ApiResponse }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_ApiResponse[name]))}
-OpenAPIClient.field_name(::Type{ ApiResponse }, property_name::Symbol) =  _property_map_ApiResponse[property_name]
 
 function check_required(o::ApiResponse)
     true

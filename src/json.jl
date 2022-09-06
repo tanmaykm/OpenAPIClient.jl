@@ -3,10 +3,10 @@
 # - field names that are Julia keywords
 struct JSONWrapper{T<:APIModel} <: AbstractDict{Symbol, Any}
     wrapped::T
-    flds::Vector{Symbol}
+    flds::Tuple
 end
 
-JSONWrapper(o::T) where {T<:APIModel} = JSONWrapper(o, filter(n->hasproperty(o,n), propertynames(T)))
+JSONWrapper(o::T) where {T<:APIModel} = JSONWrapper(o, filter(n->hasproperty(o,n) && (getproperty(o,n) !== nothing), propertynames(o)))
 
 getindex(w::JSONWrapper, s::Symbol) = getproperty(w.wrapped, s)
 keys(w::JSONWrapper) = w.flds
@@ -35,7 +35,7 @@ from_json(::Type{Any}, j::Dict{String,Any}) = j
 
 function from_json(o::T, json::Dict{String,Any}) where {T <: APIModel}
     jsonkeys = [Symbol(k) for k in keys(json)]
-    for name in intersect(propertynames(T), jsonkeys)
+    for name in intersect(propertynames(o), jsonkeys)
         from_json(o, name, json[String(name)])
     end
     o
@@ -44,16 +44,16 @@ end
 function from_json(o::T, name::Symbol, json::Dict{String,Any}) where {T <: APIModel}
     ftype = property_type(T, name)
     fval = from_json(ftype, json)
-    setfield!(o, field_name(T,name), convert(ftype, fval))
+    setfield!(o, name, convert(ftype, fval))
     o
 end
-from_json(o::T, name::Symbol, v) where {T} = (setfield!(o, field_name(T,name), convert(property_type(T, name), v)); o)
+from_json(o::T, name::Symbol, v) where {T} = (setfield!(o, name, convert(property_type(T, name), v)); o)
 function from_json(o::T, name::Symbol, v::Vector) where {T}
     # in Julia we can not support JSON null unless the element type is explicitly set to support it
     ftype = property_type(T, name)
     vtype = isa(ftype, Union) ? ((ftype.a === Nothing) ? ftype.b : ftype.a) : isa(ftype, Vector) ? ftype : Union{}
     (Nothing <: eltype(vtype)) || filter!(x->x!==nothing, v)
-    setfield!(o, field_name(T,name), convert(property_type(T, name), v))
+    setfield!(o, name, convert(property_type(T, name), v))
     o
 end
 from_json(o::T, name::Symbol, v::Nothing) where {T} = o
