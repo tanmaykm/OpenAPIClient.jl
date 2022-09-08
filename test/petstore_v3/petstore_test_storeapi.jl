@@ -26,6 +26,7 @@ function test(uri)
     order = getOrderById(api, 5)
     @test isa(order, Order)
     @test order.id == 5
+    @test isa(order.shipDate, ZonedDateTime)
 
     @info("StoreApi - getOrderById (async)")
     response_channel = Channel{Order}(1)
