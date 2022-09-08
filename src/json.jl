@@ -38,22 +38,47 @@ function from_json(o::T, json::Dict{String,Any}) where {T <: APIModel}
     for name in intersect(propertynames(o), jsonkeys)
         from_json(o, name, json[String(name)])
     end
-    o
+    return o
 end
 
 function from_json(o::T, name::Symbol, json::Dict{String,Any}) where {T <: APIModel}
     ftype = property_type(T, name)
     fval = from_json(ftype, json)
     setfield!(o, name, convert(ftype, fval))
-    o
+    return o
 end
-from_json(o::T, name::Symbol, v) where {T} = (setfield!(o, name, convert(property_type(T, name), v)); o)
-function from_json(o::T, name::Symbol, v::Vector) where {T}
+function from_json(o::T, name::Symbol, v) where {T <: APIModel}
+    ftype = property_type(T, name)
+    if ZonedDateTime <: ftype
+        setfield!(o, name, str2zoneddatetime(v))
+    elseif DateTime <: ftype
+        setfield!(o, name, str2datetime(v))
+    elseif Date <: ftype
+        setfield!(o, name, str2date(v))
+    else
+        setfield!(o, name, convert(ftype, v))
+    end
+    return o
+end
+function from_json(o::T, name::Symbol, v::Vector) where {T <: APIModel}
     # in Julia we can not support JSON null unless the element type is explicitly set to support it
     ftype = property_type(T, name)
-    vtype = isa(ftype, Union) ? ((ftype.a === Nothing) ? ftype.b : ftype.a) : isa(ftype, Vector) ? ftype : Union{}
-    (Nothing <: eltype(vtype)) || filter!(x->x!==nothing, v)
-    setfield!(o, name, convert(property_type(T, name), v))
-    o
+    vtype = isa(ftype, Union) ? ((ftype.a === Nothing) ? ftype.b : ftype.a) : (ftype <: Vector) ? ftype : Union{}
+    veltype = eltype(vtype)
+    (Nothing <: veltype) || filter!(x->x!==nothing, v)
+
+    if ZonedDateTime <: veltype
+        setfield!(o, name, map(str2zoneddatetime, v))
+    elseif DateTime <: veltype
+        setfield!(o, name, map(str2datetime, v))
+    elseif Date <: veltype
+        setfield!(o, name, map(str2date, v))
+    else
+        setfield!(o, name, convert(ftype, v))
+    end
+    return o
 end
-from_json(o::T, name::Symbol, v::Nothing) where {T} = o
+function from_json(o::T, name::Symbol, ::Nothing) where {T <: APIModel}
+    setfield!(o, name, nothing)
+    return o
+end

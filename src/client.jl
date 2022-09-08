@@ -25,7 +25,8 @@ const DATETIME_FORMATS = [
 const DEFAULT_TIMEOUT_SECS = 5*60
 const DEFAULT_LONGPOLL_TIMEOUT_SECS = 15*60
 
-function Base.convert(::Type{ZonedDateTime}, str::String)
+str2zoneddatetime(bytes::Vector{UInt8}) = str2zoneddatetime(String(bytes))
+function str2zoneddatetime(str::String)
     for fmt in DATETIME_FORMATS
         try
             return ZonedDateTime(str, fmt)
@@ -33,11 +34,12 @@ function Base.convert(::Type{ZonedDateTime}, str::String)
             # try next format
         end
     end
-    return ZonedDateTime(convert(DateTime, str), localzone())
+    return ZonedDateTime(str2datetime(str), localzone())
     throw(OpenAPIException("Unsupported ZonedDateTime format: $str"))
 end
 
-function Base.convert(::Type{DateTime}, str::String)
+str2datetime(bytes::Vector{UInt8}) = str2datetime(String(bytes))
+function str2datetime(str::String)
     for fmt in DATETIME_FORMATS
         try
             return DateTime(str, fmt)
@@ -48,7 +50,8 @@ function Base.convert(::Type{DateTime}, str::String)
     throw(OpenAPIException("Unsupported DateTime format: $str"))
 end
 
-function Base.convert(::Type{Date}, str::String)
+str2date(bytes::Vector{UInt8}) = str2date(String(bytes))
+function str2date(str::String)
     for fmt in DATETIME_FORMATS
         try
             return Date(str, fmt)
@@ -279,6 +282,11 @@ end
 response(::Type{String}, data::Vector{UInt8}) = String(data)
 response(::Type{T}, data::Vector{UInt8}) where {T<:Real} = parse(T, String(data))
 response(::Type{T}, data::T) where {T} = data
+
+response(::Type{ZonedDateTime}, data) = str2zoneddatetime(data)
+response(::Type{DateTime}, data) = str2datetime(data)
+response(::Type{Date}, data) = str2date(data)
+
 response(::Type{T}, data) where {T} = convert(T, data)
 response(::Type{T}, data::Dict{String,Any}) where {T} = from_json(T, data)::T
 response(::Type{T}, data::Dict{String,Any}) where {T<:Dict} = convert(T, data)
@@ -437,6 +445,12 @@ function setproperty!(o::T, name::Symbol, val) where {T<:APIModel}
 
     if isa(val, fieldtype)
         return setfield!(o, name, val)
+    elseif fieldtype === ZonedDateTime
+        return setfield!(o, name, str2zoneddatetime(val))
+    elseif fieldtype === DateTime
+        return setfield!(o, name, str2datetime(val))
+    elseif fieldtype === Date
+        return setfield!(o, name, str2date(val))
     else
         ftval = try
             convert(fieldtype, val)

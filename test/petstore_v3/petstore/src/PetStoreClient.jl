@@ -6,8 +6,7 @@ module PetStoreClient
 using Random
 using Dates, TimeZones
 using OpenAPIClient
-import OpenAPIClient: property_type, hasproperty, validate_property, APIImpl, APIModel
-import Base: convert, propertynames
+import OpenAPIClient: property_type, validate_property, APIImpl, APIModel
 
 include("modelincludes.jl")
 
