@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 **email** | **String** |  | [optional] [default to nothing]
 **password** | **String** |  | [optional] [default to nothing]
 **phone** | **String** |  | [optional] [default to nothing]
-**userStatus** | **Int32** | User Status | [optional] [default to nothing]
+**userStatus** | **Int64** | User Status | [optional] [default to nothing]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

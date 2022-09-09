@@ -41,8 +41,8 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getInventory**
-> getInventory(_api::StoreApi; _mediaType=nothing) -> Dict{String, Int32}  <br/>
-> getInventory(_api::StoreApi, response_stream::Channel; _mediaType=nothing) -> Dict{String, Int32} 
+> getInventory(_api::StoreApi; _mediaType=nothing) -> Dict{String, Int64}  <br/>
+> getInventory(_api::StoreApi, response_stream::Channel; _mediaType=nothing) -> Dict{String, Int64} 
 
 Returns pet inventories by status
 
@@ -53,7 +53,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-**Dict{String, Int32}**
+**Dict{String, Int64}**
 
 ### Authorization
 

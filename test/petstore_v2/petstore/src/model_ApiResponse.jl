@@ -9,14 +9,14 @@
         message=nothing,
     )
 
-    - code::Int32
+    - code::Int64
     - type::String
     - message::String
 """
 Base.@kwdef mutable struct ApiResponse <: OpenAPIClient.APIModel
-    code = nothing # spec type: Union{ Nothing, Int32 }
-    type = nothing # spec type: Union{ Nothing, String }
-    message = nothing # spec type: Union{ Nothing, String }
+    code::Union{Nothing, Int64} = nothing
+    type::Union{Nothing, String} = nothing
+    message::Union{Nothing, String} = nothing
 
     function ApiResponse(code, type, message, )
         validate_property(ApiResponse, Symbol("code"), code)
@@ -26,7 +26,7 @@ Base.@kwdef mutable struct ApiResponse <: OpenAPIClient.APIModel
     end
 end # type ApiResponse
 
-const _property_types_ApiResponse = Dict{Symbol,String}(Symbol("code")=>"Int32", Symbol("type")=>"String", Symbol("message")=>"String", )
+const _property_types_ApiResponse = Dict{Symbol,String}(Symbol("code")=>"Int64", Symbol("type")=>"String", Symbol("message")=>"String", )
 OpenAPIClient.property_type(::Type{ ApiResponse }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_ApiResponse[name]))}
 
 function check_required(o::ApiResponse)
