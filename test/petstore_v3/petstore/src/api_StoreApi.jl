@@ -33,7 +33,7 @@ function deleteOrder(_api::StoreApi, response_stream::Channel, in_orderId::Strin
 end
 
 function _oacinternal_getInventory(_api::StoreApi; _mediaType=nothing)
-    _ctx = OpenAPIClient.Ctx(_api.client, "GET", Dict{String, Int32}, "/store/inventory", ["api_key", ])
+    _ctx = OpenAPIClient.Ctx(_api.client, "GET", Dict{String, Int64}, "/store/inventory", ["api_key", ])
     OpenAPIClient.set_header_accept(_ctx, ["application/json", ])
     OpenAPIClient.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
     return _ctx
@@ -45,7 +45,7 @@ Returns a map of status codes to quantities
 
 Params:
 
-Return: Dict{String, Int32}
+Return: Dict{String, Int64}
 """
 function getInventory(_api::StoreApi; _mediaType=nothing)
     _ctx = _oacinternal_getInventory(_api; _mediaType=_mediaType)

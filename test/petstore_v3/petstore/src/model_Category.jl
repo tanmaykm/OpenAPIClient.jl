@@ -13,8 +13,8 @@
     - name::String
 """
 Base.@kwdef mutable struct Category <: OpenAPIClient.APIModel
-    id = nothing # spec type: Union{ Nothing, Int64 }
-    name = nothing # spec type: Union{ Nothing, String }
+    id::Union{Nothing, Int64} = nothing
+    name::Union{Nothing, String} = nothing
 
     function Category(id, name, )
         validate_property(Category, Symbol("id"), id)

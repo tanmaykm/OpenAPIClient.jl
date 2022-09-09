@@ -12,7 +12,7 @@ function test(uri)
 
     @info("StoreApi - getInventory")
     inventory = getInventory(api)
-    @test isa(inventory, Dict{String,Int32})
+    @test isa(inventory, Dict{String,Int64})
     @test !isempty(inventory)
 
     @info("StoreApi - placeOrder")

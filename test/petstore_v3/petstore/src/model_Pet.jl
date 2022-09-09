@@ -21,12 +21,12 @@
     - status::String : pet status in the store
 """
 Base.@kwdef mutable struct Pet <: OpenAPIClient.APIModel
-    id = nothing # spec type: Union{ Nothing, Int64 }
+    id::Union{Nothing, Int64} = nothing
     category = nothing # spec type: Union{ Nothing, Category }
-    name = nothing # spec type: Union{ Nothing, String }
-    photoUrls = nothing # spec type: Union{ Nothing, Vector{String} }
-    tags = nothing # spec type: Union{ Nothing, Vector{Tag} }
-    status = nothing # spec type: Union{ Nothing, String }
+    name::Union{Nothing, String} = nothing
+    photoUrls::Union{Nothing, Vector{String}} = nothing
+    tags::Union{Nothing, Vector} = nothing # spec type: Union{ Nothing, Vector{Tag} }
+    status::Union{Nothing, String} = nothing
 
     function Pet(id, category, name, photoUrls, tags, status, )
         validate_property(Pet, Symbol("id"), id)

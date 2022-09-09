@@ -3,7 +3,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**code** | **Int32** |  | [optional] [default to nothing]
+**code** | **Int64** |  | [optional] [default to nothing]
 **type** | **String** |  | [optional] [default to nothing]
 **message** | **String** |  | [optional] [default to nothing]
 

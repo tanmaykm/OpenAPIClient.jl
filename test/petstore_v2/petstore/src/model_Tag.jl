@@ -12,8 +12,8 @@
     - name::String
 """
 Base.@kwdef mutable struct Tag <: OpenAPIClient.APIModel
-    id = nothing # spec type: Union{ Nothing, Int64 }
-    name = nothing # spec type: Union{ Nothing, String }
+    id::Union{Nothing, Int64} = nothing
+    name::Union{Nothing, String} = nothing
 
     function Tag(id, name, )
         validate_property(Tag, Symbol("id"), id)

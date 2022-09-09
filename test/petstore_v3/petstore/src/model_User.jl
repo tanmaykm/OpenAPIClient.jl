@@ -22,17 +22,17 @@
     - email::String
     - password::String
     - phone::String
-    - userStatus::Int32 : User Status
+    - userStatus::Int64 : User Status
 """
 Base.@kwdef mutable struct User <: OpenAPIClient.APIModel
-    id = nothing # spec type: Union{ Nothing, Int64 }
-    username = nothing # spec type: Union{ Nothing, String }
-    firstName = nothing # spec type: Union{ Nothing, String }
-    lastName = nothing # spec type: Union{ Nothing, String }
-    email = nothing # spec type: Union{ Nothing, String }
-    password = nothing # spec type: Union{ Nothing, String }
-    phone = nothing # spec type: Union{ Nothing, String }
-    userStatus = nothing # spec type: Union{ Nothing, Int32 }
+    id::Union{Nothing, Int64} = nothing
+    username::Union{Nothing, String} = nothing
+    firstName::Union{Nothing, String} = nothing
+    lastName::Union{Nothing, String} = nothing
+    email::Union{Nothing, String} = nothing
+    password::Union{Nothing, String} = nothing
+    phone::Union{Nothing, String} = nothing
+    userStatus::Union{Nothing, Int64} = nothing
 
     function User(id, username, firstName, lastName, email, password, phone, userStatus, )
         validate_property(User, Symbol("id"), id)
@@ -47,7 +47,7 @@ Base.@kwdef mutable struct User <: OpenAPIClient.APIModel
     end
 end # type User
 
-const _property_types_User = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("username")=>"String", Symbol("firstName")=>"String", Symbol("lastName")=>"String", Symbol("email")=>"String", Symbol("password")=>"String", Symbol("phone")=>"String", Symbol("userStatus")=>"Int32", )
+const _property_types_User = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("username")=>"String", Symbol("firstName")=>"String", Symbol("lastName")=>"String", Symbol("email")=>"String", Symbol("password")=>"String", Symbol("phone")=>"String", Symbol("userStatus")=>"Int64", )
 OpenAPIClient.property_type(::Type{ User }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_User[name]))}
 
 function check_required(o::User)

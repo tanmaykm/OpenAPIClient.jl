@@ -15,18 +15,18 @@
 
     - id::Int64
     - petId::Int64
-    - quantity::Int32
+    - quantity::Int64
     - shipDate::ZonedDateTime
     - status::String : Order Status
     - complete::Bool
 """
 Base.@kwdef mutable struct Order <: OpenAPIClient.APIModel
-    id = nothing # spec type: Union{ Nothing, Int64 }
-    petId = nothing # spec type: Union{ Nothing, Int64 }
-    quantity = nothing # spec type: Union{ Nothing, Int32 }
-    shipDate = nothing # spec type: Union{ Nothing, ZonedDateTime }
-    status = nothing # spec type: Union{ Nothing, String }
-    complete = false # spec type: Union{ Nothing, Bool }
+    id::Union{Nothing, Int64} = nothing
+    petId::Union{Nothing, Int64} = nothing
+    quantity::Union{Nothing, Int64} = nothing
+    shipDate::Union{Nothing, ZonedDateTime} = nothing
+    status::Union{Nothing, String} = nothing
+    complete::Union{Nothing, Bool} = false
 
     function Order(id, petId, quantity, shipDate, status, complete, )
         validate_property(Order, Symbol("id"), id)
@@ -39,7 +39,7 @@ Base.@kwdef mutable struct Order <: OpenAPIClient.APIModel
     end
 end # type Order
 
-const _property_types_Order = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("petId")=>"Int64", Symbol("quantity")=>"Int32", Symbol("shipDate")=>"ZonedDateTime", Symbol("status")=>"String", Symbol("complete")=>"Bool", )
+const _property_types_Order = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("petId")=>"Int64", Symbol("quantity")=>"Int64", Symbol("shipDate")=>"ZonedDateTime", Symbol("status")=>"String", Symbol("complete")=>"Bool", )
 OpenAPIClient.property_type(::Type{ Order }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_Order[name]))}
 
 function check_required(o::Order)
